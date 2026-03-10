@@ -1,0 +1,27 @@
+{
+  "anxiety": {
+    "symptoms": ["panic", "worry", "restless", "heart racing", "sweating", "trembling"],
+    "medications": ["SSRIs", "Buspirone", "Benzodiazepines"],
+    "recommendations": "Consider therapy (CBT), breathing exercises, and consult a psychiatrist if persistent."
+  },
+  "depression": {
+    "symptoms": ["fatigue", "hopeless", "sad", "low energy", "sleep issues", "appetite changes"],
+    "medications": ["SSRIs", "SNRIs", "Bupropion"],
+    "recommendations": "Regular exercise, social support, and professional counseling are key interventions."
+  },
+  "stress": {
+    "symptoms": ["tension", "overwhelmed", "irritable", "headache", "burnout"],
+    "medications": ["Non-pharmacological preferred"],
+    "recommendations": "Mindfulness, yoga, journaling, and work-life balance strategies recommended."
+  },
+  "insomnia": {
+    "symptoms": ["can't sleep", "waking up", "tired", "nightmares", "restless"],
+    "medications": ["Melatonin", "Zolpidem", "CBT-I"],
+    "recommendations": "Sleep hygiene improvements, cognitive behavioral therapy for insomnia (CBT-I) is gold standard."
+  },
+  "bipolar": {
+    "symptoms": ["mood swings", "euphoria", "mania", "energy crash", "impulsive"],
+    "medications": ["Lithium", "Valproate", "Lamotrigine"],
+    "recommendations": "Requires professional diagnosis and long-term mood stabilizer management."
+  }
+}

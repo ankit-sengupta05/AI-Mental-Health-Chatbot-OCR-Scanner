@@ -1,0 +1,10 @@
+flask
+flask-cors
+tensorflow
+transformers
+torch
+pytesseract
+Pillow
+numpy
+scikit-learn
+werkzeug

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MindScan AI — Mental Health Assistant</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0d14;
+      --surface: #111520;
+      --border: #1e2535;
+      --accent: #4df0c0;
+      --accent2: #7b6cff;
+      --danger: #ff5f7e;
+      --warn: #ffb347;
+      --text: #e8eaf2;
+      --muted: #6b7592;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .bg-grid {
+      position: fixed; inset: 0; z-index: 0;
+      background-image: linear-gradient(rgba(77,240,192,0.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(77,240,192,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+    header {
+      position: relative; z-index: 10;
+      padding: 28px 48px;
+      display: flex; align-items: center; gap: 16px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(10,13,20,0.9);
+      backdrop-filter: blur(12px);
+    }
+    .logo-mark {
+      width: 40px; height: 40px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 10px;
+      display: grid; place-items: center;
+      font-size: 20px;
+    }
+    header h1 { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+    header span { color: var(--accent); }
+    .tag { margin-left: auto; font-size: 11px; color: var(--muted); background: var(--surface); padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); }
+
+    .main { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 0; min-height: calc(100vh - 81px); }
+
+    /* Chat Panel */
+    .chat-panel { border-right: 1px solid var(--border); display: flex; flex-direction: column; }
+    .panel-header { padding: 24px 32px 20px; border-bottom: 1px solid var(--border); }
+    .panel-header h2 { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; }
+    .panel-header p { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+    .chat-messages { flex: 1; overflow-y: auto; padding: 24px 32px; display: flex; flex-direction: column; gap: 16px; max-height: 420px; }
+    .chat-messages::-webkit-scrollbar { width: 4px; }
+    .chat-messages::-webkit-scrollbar-track { background: transparent; }
+    .chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    .msg { display: flex; gap: 12px; align-items: flex-start; animation: fadeUp 0.3s ease; }
+    .msg.user { flex-direction: row-reverse; }
+    .msg-avatar { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; font-size: 14px; flex-shrink: 0; }
+    .msg.ai .msg-avatar { background: linear-gradient(135deg, var(--accent), var(--accent2)); }
+    .msg.user .msg-avatar { background: var(--surface); border: 1px solid var(--border); }
+    .msg-bubble { max-width: 75%; padding: 12px 16px; border-radius: 12px; font-size: 14px; line-height: 1.6; }
+    .msg.ai .msg-bubble { background: var(--surface); border: 1px solid var(--border); }
+    .msg.user .msg-bubble { background: linear-gradient(135deg, rgba(77,240,192,0.15), rgba(123,108,255,0.15)); border: 1px solid rgba(77,240,192,0.2); }
+
+    .emotion-badge { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .emotion-bar-wrap { margin-top: 10px; }
+    .emotion-bar-label { font-size: 11px; color: var(--muted); display: flex; justify-content: space-between; margin-bottom: 3px; }
+    .emotion-bar { height: 4px; background: var(--border); border-radius: 4px; overflow: hidden; }
+    .emotion-bar-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+
+    .chat-input-area { padding: 20px 32px 24px; border-top: 1px solid var(--border); }
+    .chat-input-row { display: flex; gap: 10px; }
+    .chat-input { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; resize: none; outline: none; transition: border-color 0.2s; }
+    .chat-input:focus { border-color: var(--accent); }
+    .chat-input::placeholder { color: var(--muted); }
+    .btn { padding: 12px 20px; border-radius: 10px; border: none; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .btn-primary { background: var(--accent); color: #0a0d14; }
+    .btn-primary:hover { background: #3dd4aa; transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* OCR Panel */
+    .ocr-panel { display: flex; flex-direction: column; }
+    .upload-zone { margin: 24px 32px; border: 2px dashed var(--border); border-radius: 16px; padding: 40px 24px; text-align: center; transition: all 0.2s; cursor: pointer; position: relative; }
+    .upload-zone:hover, .upload-zone.drag { border-color: var(--accent); background: rgba(77,240,192,0.04); }
+    .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    .upload-icon { font-size: 40px; margin-bottom: 12px; }
+    .upload-zone h3 { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .upload-zone p { font-size: 13px; color: var(--muted); }
+
+    .ocr-results { flex: 1; padding: 0 32px 24px; overflow-y: auto; }
+    .result-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; margin-bottom: 12px; animation: fadeUp 0.3s ease; }
+    .result-card h4 { font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 10px; }
+    .kv-row { display: flex; justify-content: space-between; font-size: 13px; padding: 5px 0; border-bottom: 1px solid var(--border); }
+    .kv-row:last-child { border: none; }
+    .kv-key { color: var(--muted); }
+    .kv-val { color: var(--accent); font-weight: 500; max-width: 60%; text-align: right; word-break: break-word; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+    .tag-pill { background: rgba(123,108,255,0.15); border: 1px solid rgba(123,108,255,0.3); color: #a89cff; font-size: 11px; padding: 3px 10px; border-radius: 20px; }
+    .crossref-alert { background: rgba(255,95,126,0.08); border: 1px solid rgba(255,95,126,0.25); border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; font-size: 13px; line-height: 1.6; color: #ffb0bf; }
+    .crossref-alert.ok { background: rgba(77,240,192,0.06); border-color: rgba(77,240,192,0.2); color: var(--accent); }
+
+    .loader { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(77,240,192,0.3); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block; margin-right: 6px; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    .empty-state { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 14px; }
+    .empty-state .icon { font-size: 48px; margin-bottom: 12px; opacity: 0.4; }
+
+    @media (max-width: 768px) {
+      .main { grid-template-columns: 1fr; }
+      .chat-panel { border-right: none; border-bottom: 1px solid var(--border); }
+      header { padding: 20px 24px; }
+    }
+  </style>
+</head>
+<body>
+<div class="bg-grid"></div>
+
+<header>
+  <div class="logo-mark">🧠</div>
+  <h1>Mind<span>Scan</span> AI</h1>
+  <div class="tag"><span class="status-dot"></span>System Active</div>
+</header>
+
+<div class="main">
+  <!-- CHAT PANEL -->
+  <div class="chat-panel">
+    <div class="panel-header">
+      <h2>💬 Emotion Intelligence Engine</h2>
+      <p>Share how you're feeling — NLP will analyze your emotional state</p>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="msg ai">
+        <div class="msg-avatar">🤖</div>
+        <div class="msg-bubble">
+          Hello. I'm your mental health AI companion. Tell me how you're feeling today — I'll analyze your emotional state and provide personalized insights.
+        </div>
+      </div>
+    </div>
+    <div class="chat-input-area">
+      <div class="chat-input-row">
+        <textarea class="chat-input" id="chatInput" placeholder="Describe how you're feeling..." rows="3"></textarea>
+        <button class="btn btn-primary" id="sendBtn" onclick="sendMessage()">Analyze</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- OCR PANEL -->
+  <div class="ocr-panel">
+    <div class="panel-header">
+      <h2>📄 Medical Report Scanner</h2>
+      <p>Upload a medical report image for OCR extraction & cross-referencing</p>
+    </div>
+
+    <div class="upload-zone" id="uploadZone">
+      <input type="file" id="fileInput" accept="image/*" onchange="handleFileUpload(this)"/>
+      <div class="upload-icon">🏥</div>
+      <h3>Drop Medical Report Here</h3>
+      <p>Supports PNG, JPG, TIFF — prescriptions, lab results, clinical notes</p>
+    </div>
+
+    <div class="ocr-results" id="ocrResults">
+      <div class="empty-state">
+        <div class="icon">📋</div>
+        <p>Upload a medical report to extract and analyze its data</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API_BASE = 'http://localhost:5000/api';
+
+// Drag & drop
+const zone = document.getElementById('uploadZone');
+zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
+zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
+zone.addEventListener('drop', e => {
+  e.preventDefault(); zone.classList.remove('drag');
+  const file = e.dataTransfer.files[0];
+  if (file) processOCR(file);
+});
+
+async function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const btn = document.getElementById('sendBtn');
+  const text = input.value.trim();
+  if (!text) return;
+
+  appendMessage('user', text);
+  input.value = '';
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loader"></span>';
+
+  try {
+    const res = await fetch(`${API_BASE}/chat`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({message: text})
+    });
+    const data = await res.json();
+    if (data.emotion_analysis) renderEmotionResponse(data.emotion_analysis);
+    else appendMessage('ai', '⚠️ Could not analyze emotion. Please try again.');
+  } catch (err) {
+    appendMessage('ai', `❌ Connection error. Make sure the backend is running on port 5000.\n\nError: ${err.message}`);
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = 'Analyze';
+}
+
+function appendMessage(role, text) {
+  const box = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.innerHTML = `
+    <div class="msg-avatar">${role === 'ai' ? '🤖' : '👤'}</div>
+    <div class="msg-bubble">${text.replace(/\n/g, '<br>')}</div>
+  `;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+
+function renderEmotionResponse(e) {
+  const colorMap = {
+    green: '#4df0c0', blue: '#60a5fa', orange: '#fb923c',
+    red: '#ff5f7e', yellow: '#fbbf24', teal: '#2dd4bf', gray: '#9ca3af'
+  };
+  const color = colorMap[e.color] || '#4df0c0';
+  const riskColors = {low: '#4df0c0', medium: '#fbbf24', high: '#ff5f7e', 'low-medium': '#a3e635'};
+  const riskColor = riskColors[e.risk_level] || '#9ca3af';
+
+  const box = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'msg ai';
+
+  const topEmotions = e.all_emotions.slice(0, 4);
+  const barsHTML = topEmotions.map(em => `
+    <div class="emotion-bar-wrap">
+      <div class="emotion-bar-label"><span>${em.label}</span><span>${em.score}%</span></div>
+      <div class="emotion-bar"><div class="emotion-bar-fill" style="width:${em.score}%;background:${color}"></div></div>
+    </div>
+  `).join('');
+
+  div.innerHTML = `
+    <div class="msg-avatar">🤖</div>
+    <div class="msg-bubble">
+      <span class="emotion-badge" style="background:${color}20;color:${color};border:1px solid ${color}40">
+        ${getEmotionEmoji(e.dominant_emotion)} ${e.dominant_emotion} — ${e.confidence}% confidence
+      </span>
+      <span class="emotion-badge" style="background:${riskColor}20;color:${riskColor};border:1px solid ${riskColor}40;margin-left:6px">
+        Risk: ${e.risk_level}
+      </span>
+      <br/><br/>
+      ${e.advice}
+      <div style="margin-top:14px">${barsHTML}</div>
+    </div>
+  `;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+
+function getEmotionEmoji(e) {
+  const map = {joy:'😊', sadness:'😢', anger:'😠', fear:'😨', disgust:'😒', surprise:'😲', neutral:'😐'};
+  return map[e] || '🧠';
+}
+
+async function handleFileUpload(input) {
+  const file = input.files[0];
+  if (file) processOCR(file);
+}
+
+async function processOCR(file) {
+  const resultsEl = document.getElementById('ocrResults');
+  resultsEl.innerHTML = `<div class="empty-state"><span class="loader"></span><p style="margin-top:12px">Scanning report...</p></div>`;
+
+  const formData = new FormData();
+  formData.append('file', file);
+
+  try {
+    const res = await fetch(`${API_BASE}/ocr`, {method: 'POST', body: formData});
+    const data = await res.json();
+    if (data.ocr_result) renderOCRResults(data.ocr_result);
+    else resultsEl.innerHTML = `<div class="empty-state"><p>⚠️ OCR failed. Try a clearer image.</p></div>`;
+  } catch (err) {
+    resultsEl.innerHTML = `<div class="empty-state"><p>❌ Backend not reachable. Start the Flask server first.</p></div>`;
+  }
+}
+
+function renderOCRResults(r) {
+  const el = document.getElementById('ocrResults');
+  let html = '';
+
+  // Patient info
+  html += `<div class="result-card">
+    <h4>📋 Patient Information</h4>
+    <div class="kv-row"><span class="kv-key">Name</span><span class="kv-val">${r.patient_name || 'Not detected'}</span></div>
+    <div class="kv-row"><span class="kv-key">Date</span><span class="kv-val">${r.date || 'Not detected'}</span></div>
+  </div>`;
+
+  // Vitals
+  if (Object.keys(r.vitals).length > 0) {
+    const rows = Object.entries(r.vitals).map(([k,v]) => `<div class="kv-row"><span class="kv-key">${k}</span><span class="kv-val">${v}</span></div>`).join('');
+    html += `<div class="result-card"><h4>❤️ Vitals</h4>${rows}</div>`;
+  }
+
+  // Lab Values
+  if (Object.keys(r.lab_values).length > 0) {
+    const rows = Object.entries(r.lab_values).map(([k,v]) => `<div class="kv-row"><span class="kv-key">${k}</span><span class="kv-val">${v}</span></div>`).join('');
+    html += `<div class="result-card"><h4>🧪 Lab Values</h4>${rows}</div>`;
+  }
+
+  // Diagnoses
+  if (r.diagnoses.length > 0) {
+    html += `<div class="result-card">
+      <h4>🔬 Diagnoses / Impressions</h4>
+      <div class="tag-list">${r.diagnoses.map(d => `<span class="tag-pill">${d}</span>`).join('')}</div>
+    </div>`;
+  }
+
+  // Medications
+  if (r.medications.length > 0) {
+    html += `<div class="result-card">
+      <h4>💊 Medications Detected</h4>
+      <div class="tag-list">${r.medications.map(m => `<span class="tag-pill">${m}</span>`).join('')}</div>
+    </div>`;
+  }
+
+  // Raw text preview
+  html += `<div class="result-card">
+    <h4>📝 Extracted Text Preview</h4>
+    <p style="font-size:12px;color:var(--muted);line-height:1.7;max-height:120px;overflow-y:auto">${(r.raw_text || '').substring(0, 500) || 'No text extracted'}...</p>
+  </div>`;
+
+  el.innerHTML = html;
+}
+
+// Enter to send
+document.getElementById('chatInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+});
+</script>
+</body>
+</html>
