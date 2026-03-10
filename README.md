@@ -15,16 +15,14 @@
 ![HuggingFace](https://img.shields.io/badge/🤗_HuggingFace-Transformers_4.x-FFD21E?style=for-the-badge)
 ![Tesseract](https://img.shields.io/badge/Tesseract-OCR_Engine-4285F4?style=for-the-badge&logo=google&logoColor=white)
 ![Pillow](https://img.shields.io/badge/Pillow-Image_Processing-11A0D9?style=for-the-badge&logo=python&logoColor=white)
-
 ![License](https://img.shields.io/badge/License-MIT-00e5c8?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Build-Passing-brightgreen?style=for-the-badge&logo=githubactions&logoColor=white)
 ![Flake8](https://img.shields.io/badge/Flake8-PEP8_Clean-6c63ff?style=for-the-badge&logo=python&logoColor=white)
 ![PRs](https://img.shields.io/badge/PRs-Welcome-ff4d8d?style=for-the-badge&logo=github&logoColor=white)
-![NLP](https://img.shields.io/badge/NLP-DistilRoBERTa-orange?style=for-the-badge&logo=pytorch&logoColor=white)
 
 <br/>
 
-> **🧠 Emotion intelligence meets clinical data** — production-ready NLP sentiment analysis pipeline powered by `DistilRoBERTa` + structured medical report extraction via `Pytesseract OCR` + intelligent cross-referencing against a curated medical conditions database — all served through a blazing-fast **Flask REST API**.
+> **🧠 Emotion intelligence meets clinical data** — production-ready NLP sentiment analysis pipeline powered by `DistilRoBERTa` + structured medical report extraction via `Pytesseract OCR` + intelligent cross-referencing against a curated medical conditions database — served through a blazing-fast **Flask REST API**.
 
 </div>
 
@@ -80,7 +78,7 @@
 
 ## 🧠 Emotion Classification Engine
 
-> **Model:** `j-hartmann/emotion-english-distilroberta-base` · 124M parameters · fine-tuned across 6 diverse emotion datasets · state-of-the-art affective computing NLP
+> **Model:** `j-hartmann/emotion-english-distilroberta-base` · 124M parameters · fine-tuned across 6 emotion datasets
 
 | Emotion | Risk Level | Color Token | Clinical Recommendation |
 |:-------:|:----------:|:-----------:|:------------------------|
@@ -93,7 +91,7 @@
 | 😐 `neutral` | 🟢 `low` | `gray` | Maintain consistent self-care & wellness practices |
 
 > [!NOTE]
-> The `UNEXPECTED` key warning for `roberta.embeddings.position_ids` during model load is **harmless** — it is a known cross-architecture artifact when loading RoBERTa checkpoints across task heads and can be safely ignored.
+> The `UNEXPECTED` key warning for `roberta.embeddings.position_ids` at model load is **harmless** — known cross-architecture artifact, safely ignored.
 
 ---
 
@@ -123,93 +121,74 @@ AI-Mental-Health-Chatbot-OCR-Scanner/
 
 ---
 
-## 🚀 Quick Start — Local Development
+## 🚀 Quick Start
 
 ### 1️⃣ Prerequisites
 
-> ⚠️ **Tesseract OCR** must be installed on your system `PATH` before launching:
-
-| Platform | Command |
-|:--------:|:--------|
-| 🪟 **Windows** | [UB-Mannheim installer](https://github.com/UB-Mannheim/tesseract/wiki) → add `tesseract.exe` to system PATH |
+| Platform | Install Tesseract OCR |
+|:--------:|:----------------------|
+| 🪟 **Windows** | [UB-Mannheim installer](https://github.com/UB-Mannheim/tesseract/wiki) → add to PATH |
 | 🍎 **macOS** | `brew install tesseract` |
-| 🐧 **Linux / Ubuntu** | `sudo apt install tesseract-ocr` |
+| 🐧 **Linux** | `sudo apt install tesseract-ocr` |
 
 ### 2️⃣ Clone & Install
 
 ```bash
 git clone https://github.com/your-username/AI-Mental-Health-Chatbot-OCR-Scanner.git
 cd AI-Mental-Health-Chatbot-OCR-Scanner
-
-# Create virtual environment
 python -m venv venv
 venv\Scripts\activate        # Windows
 source venv/bin/activate     # macOS / Linux
-
-# Install dependencies
 cd backend && pip install -r requirements.txt
 ```
 
-### 3️⃣ Launch Backend
+### 3️⃣ Launch
 
 ```bash
 python app.py
-```
-
-```
-Loading weights: 100%|█████████████████████| 105/105
-RobertaForSequenceClassification loaded ✅
- * Running on http://127.0.0.1:5000
- * Debug mode: on
-```
-
-> First run downloads DistilRoBERTa weights (~300 MB) automatically from HuggingFace Hub.
-
-### 4️⃣ Open Frontend
-
-```bash
-python -m http.server 8080 --directory frontend
-# → http://localhost:8080
+# → http://127.0.0.1:5000
 ```
 
 ---
 
-## 🔌 API Reference
+## 🔌 API Endpoint Reference
 
 <div align="center">
-
-**Base URL** &nbsp;`http://localhost:5000/api` &nbsp;·&nbsp; All responses · `Content-Type: application/json`
-
+<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=14&pause=1200&color=6C63FF&center=true&vCenter=true&width=600&lines=Base+URL+%3A+http%3A%2F%2Flocalhost%3A5000%2Fapi;All+responses+%3A+Content-Type%3A+application%2Fjson;CORS+enabled+%3A+all+origins" alt="API Base" /></a>
 </div>
+
+<br/>
 
 ---
 
-<!--────────────────────────── POST /api/chat ──────────────────────────-->
+### 💬 Emotion Analysis — NLP Operations
 
 <table>
 <tr>
-<td>
+<td width="100%">
 
-<img src="https://img.shields.io/badge/POST-%2Fapi%2Fchat-1db954?style=for-the-badge&labelColor=0d1117&color=1db954" />
-&nbsp;&nbsp;
-<img src="https://img.shields.io/badge/NLP-Emotion_Analysis-00e5c8?style=flat-square" />
-<img src="https://img.shields.io/badge/Model-DistilRoBERTa-6c63ff?style=flat-square" />
-<img src="https://img.shields.io/badge/Output-7_Emotion_Classes-ff4d8d?style=flat-square" />
+| | |
+|---|---|
+| ![POST](https://img.shields.io/badge/POST-grey?style=flat-square&labelColor=555) &nbsp; ![/api/chat](https://img.shields.io/badge/%2Fapi%2Fchat-1db954?style=flat-square) | ![AUTH](https://img.shields.io/badge/AUTH-grey?style=flat-square&labelColor=555) &nbsp; ![NOT REQUIRED](https://img.shields.io/badge/NOT%20REQUIRED-2ecc71?style=flat-square) |
 
-**Analyze free-text input for emotional state using transformer-based NLP sentiment classification**
+**Analyze free-text for emotional state using transformer-based NLP classification**
 
-**📥 Request**
-```http
-POST /api/chat
-Content-Type: application/json
+| Field | Value |
+|:------|:------|
+| **Method** | ![POST](https://img.shields.io/badge/POST-555?style=flat-square) |
+| **URL** | `http://localhost:5000/api/chat` |
+| **Content-Type** | `application/json` |
+| **Returns** | Dominant emotion · confidence · risk level · AI advice |
+
+```bash
+curl -X POST http://localhost:5000/api/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message":"I have been feeling really anxious and overwhelmed lately."}'
 ```
-```json
-{
-  "message": "I've been feeling really anxious and overwhelmed lately."
-}
-```
 
-**📤 Response · `200 OK`**
+<details>
+<summary>📤 Sample Response · <code>200 OK</code></summary>
+
 ```json
 {
   "status": "success",
@@ -229,7 +208,9 @@ Content-Type: application/json
 }
 ```
 
-**📋 Response Schema**
+</details>
+
+**Response Schema**
 
 | Field | Type | Description |
 |:------|:----:|:------------|
@@ -240,40 +221,43 @@ Content-Type: application/json
 | `advice` | `string` | Personalised AI-generated mental health guidance |
 | `all_emotions` | `array` | Full softmax probability distribution (sorted) |
 
-**⚡ Error Responses**
-
-- ![400](https://img.shields.io/badge/400-Bad_Request-e74c3c?style=flat-square) — Missing or empty `message` field
+> ![400](https://img.shields.io/badge/400-Bad_Request-e74c3c?style=flat-square) &nbsp; Missing or empty `message` field
 
 </td>
 </tr>
 </table>
 
+<br/>
+
 ---
 
-<!--────────────────────────── POST /api/ocr ──────────────────────────-->
+### 📄 Medical Report Scanner — OCR Operations
 
 <table>
 <tr>
-<td>
+<td width="100%">
 
-<img src="https://img.shields.io/badge/POST-%2Fapi%2Focr-8e44ad?style=for-the-badge&labelColor=0d1117&color=8e44ad" />
-&nbsp;&nbsp;
-<img src="https://img.shields.io/badge/OCR-Pytesseract-4285F4?style=flat-square" />
-<img src="https://img.shields.io/badge/Input-PNG_JPG_TIFF-FFD21E?style=flat-square" />
-<img src="https://img.shields.io/badge/Parser-Regex_NLP-00e5c8?style=flat-square" />
+| | |
+|---|---|
+| ![POST](https://img.shields.io/badge/POST-grey?style=flat-square&labelColor=555) &nbsp; ![/api/ocr](https://img.shields.io/badge/%2Fapi%2Focr-8e44ad?style=flat-square) | ![AUTH](https://img.shields.io/badge/AUTH-grey?style=flat-square&labelColor=555) &nbsp; ![NOT REQUIRED](https://img.shields.io/badge/NOT%20REQUIRED-2ecc71?style=flat-square) |
 
-**Upload a medical report image — extracts and structures vitals, lab values, medications, and diagnoses via computer vision OCR**
+**Upload a medical report image — extracts vitals, lab values, medications and diagnoses via computer vision OCR**
 
-**📥 Request**
-```http
-POST /api/ocr
-Content-Type: multipart/form-data
+| Field | Value |
+|:------|:------|
+| **Method** | ![POST](https://img.shields.io/badge/POST-555?style=flat-square) |
+| **URL** | `http://localhost:5000/api/ocr` |
+| **Content-Type** | `multipart/form-data` |
+| **Returns** | Structured patient data · vitals · labs · medications · diagnoses |
+
+```bash
+curl -X POST http://localhost:5000/api/ocr \
+  -F "file=@/path/to/medical_report.png"
 ```
-```
-file:  <image/png | image/jpeg | image/tiff>
-```
 
-**📤 Response · `200 OK`**
+<details>
+<summary>📤 Sample Response · <code>200 OK</code></summary>
+
 ```json
 {
   "status": "success",
@@ -299,7 +283,9 @@ file:  <image/png | image/jpeg | image/tiff>
 }
 ```
 
-**📋 Extraction Schema**
+</details>
+
+**Extraction Schema**
 
 | Field | Type | Extraction Method |
 |:------|:----:|:------------------|
@@ -310,41 +296,44 @@ file:  <image/png | image/jpeg | image/tiff>
 | `medications` | `array` | Lines containing dosage units: `mg` · `mcg` · `ml` |
 | `diagnoses` | `array` | Lines matching: `diagnosis` · `impression` · `assessment` |
 
-**⚡ Error Responses**
-
-- ![400](https://img.shields.io/badge/400-No_File-e74c3c?style=flat-square) — No file attached to request
-- ![400](https://img.shields.io/badge/400-Empty_Filename-e74c3c?style=flat-square) — File field present but filename empty
+> ![400](https://img.shields.io/badge/400-No_File-e74c3c?style=flat-square) &nbsp; No file attached &nbsp;&nbsp; ![400](https://img.shields.io/badge/400-Empty_Filename-e74c3c?style=flat-square) &nbsp; File field present but empty
 
 </td>
 </tr>
 </table>
 
+<br/>
+
 ---
 
-<!--────────────────────────── POST /api/analyze ──────────────────────────-->
+### 🔗 Combined Intelligence — Fusion Operations
 
 <table>
 <tr>
-<td>
+<td width="100%">
 
-<img src="https://img.shields.io/badge/POST-%2Fapi%2Fanalyze-e67e22?style=for-the-badge&labelColor=0d1117&color=e67e22" />
-&nbsp;&nbsp;
-<img src="https://img.shields.io/badge/Combined-NLP_%2B_OCR_%2B_CrossRef-ff4d8d?style=flat-square" />
-<img src="https://img.shields.io/badge/Engine-Medical_AI_Fusion-6c63ff?style=flat-square" />
+| | |
+|---|---|
+| ![POST](https://img.shields.io/badge/POST-grey?style=flat-square&labelColor=555) &nbsp; ![/api/analyze](https://img.shields.io/badge/%2Fapi%2Fanalyze-e67e22?style=flat-square) | ![AUTH](https://img.shields.io/badge/AUTH-grey?style=flat-square&labelColor=555) &nbsp; ![NOT REQUIRED](https://img.shields.io/badge/NOT%20REQUIRED-2ecc71?style=flat-square) |
 
-**Full-stack analysis — runs emotion NLP classification + OCR document extraction + medical cross-reference correlation in a single intelligent API call**
+**Full-stack intelligence — emotion NLP + OCR extraction + medical cross-reference correlation in one call**
 
-**📥 Request**
-```http
-POST /api/analyze
-Content-Type: multipart/form-data
+| Field | Value |
+|:------|:------|
+| **Method** | ![POST](https://img.shields.io/badge/POST-555?style=flat-square) |
+| **URL** | `http://localhost:5000/api/analyze` |
+| **Content-Type** | `multipart/form-data` |
+| **Returns** | Emotion analysis + OCR result + cross-reference matches |
+
+```bash
+curl -X POST http://localhost:5000/api/analyze \
+  -F "message=I feel exhausted and completely hopeless" \
+  -F "file=@/path/to/medical_report.png"
 ```
-```
-message:  "I feel exhausted and completely hopeless"   (optional)
-file:     <medical report image>                       (optional)
-```
 
-**📤 Response · `200 OK`**
+<details>
+<summary>📤 Sample Response · <code>200 OK</code></summary>
+
 ```json
 {
   "status": "success",
@@ -374,44 +363,53 @@ file:     <medical report image>                       (optional)
 }
 ```
 
-**🔗 Cross-Reference Logic**
+</details>
 
-| Condition | Trigger | Output |
-|:----------|:--------|:-------|
-| `emotion` in `[sadness, fear]` + medical match | Depression / anxiety in report | ⚠️ Strong clinical correlation warning |
-| `risk_level == high` | Any emotion state | 🔴 Immediate professional referral |
-| Medical matches found | No high-risk emotion | 📋 Recommendations surfaced |
-| No matches | Neutral / low risk | ✅ Continue monitoring |
+**Cross-Reference Logic**
 
-**⚡ Error Responses**
+| Trigger Condition | Output |
+|:------------------|:-------|
+| `emotion` = `sadness` or `fear` + depression/anxiety in report | ⚠️ Strong clinical correlation warning |
+| `risk_level` = `high` | 🔴 Immediate professional referral message |
+| Medical keyword matches found | 📋 Recommendations surfaced from DB |
+| No matches + low risk | ✅ Continue monitoring your wellbeing |
 
-- ![400](https://img.shields.io/badge/400-Bad_Request-e74c3c?style=flat-square) — Neither `message` nor `file` provided
+> ![400](https://img.shields.io/badge/400-Bad_Request-e74c3c?style=flat-square) &nbsp; Neither `message` nor `file` provided
 
 </td>
 </tr>
 </table>
 
+<br/>
+
 ---
 
-<!--────────────────────────── GET /api/health ──────────────────────────-->
+### ⚙️ System — Health & Monitoring
 
 <table>
 <tr>
-<td>
+<td width="100%">
 
-<img src="https://img.shields.io/badge/GET-%2Fapi%2Fhealth-2980b9?style=for-the-badge&labelColor=0d1117&color=2980b9" />
-&nbsp;&nbsp;
-<img src="https://img.shields.io/badge/Liveness-Health_Check-00e5c8?style=flat-square" />
-<img src="https://img.shields.io/badge/Uptime-Monitoring-brightgreen?style=flat-square" />
+| | |
+|---|---|
+| ![GET](https://img.shields.io/badge/GET-grey?style=flat-square&labelColor=555) &nbsp; ![/api/health](https://img.shields.io/badge/%2Fapi%2Fhealth-2980b9?style=flat-square) | ![AUTH](https://img.shields.io/badge/AUTH-grey?style=flat-square&labelColor=555) &nbsp; ![NOT REQUIRED](https://img.shields.io/badge/NOT%20REQUIRED-2ecc71?style=flat-square) |
 
-**Service liveness probe — use in CI/CD pipelines, Docker health checks, or uptime monitors to verify the Flask API is running and responsive**
+**Service liveness probe — integrate with Docker HEALTHCHECK, Prometheus, or UptimeRobot for production monitoring**
 
-**📥 Request**
-```http
-GET /api/health
+| Field | Value |
+|:------|:------|
+| **Method** | ![GET](https://img.shields.io/badge/GET-2980b9?style=flat-square) |
+| **URL** | `http://localhost:5000/api/health` |
+| **Content-Type** | `application/json` |
+| **Returns** | Service status confirmation |
+
+```bash
+curl -X GET http://localhost:5000/api/health
 ```
 
-**📤 Response · `200 OK`**
+<details>
+<summary>📤 Sample Response · <code>200 OK</code></summary>
+
 ```json
 {
   "status": "ok",
@@ -419,7 +417,9 @@ GET /api/health
 }
 ```
 
-> 💡 Integrate with tools like **UptimeRobot**, **Prometheus**, or **Docker HEALTHCHECK** to monitor API availability in production deployments.
+</details>
+
+> 💡 Use this endpoint in **Docker** `HEALTHCHECK`, **GitHub Actions** smoke tests, or **UptimeRobot** ping monitors to verify API availability in CI/CD and production deployments.
 
 </td>
 </tr>
@@ -429,15 +429,15 @@ GET /api/health
 
 ## 📦 Full Tech Stack
 
-| Layer | Tool / Library | Version | Role in Pipeline |
-|:------|:--------------|:-------:|:-----------------|
-| 🧠 **Transformer Model** | `distilroberta-base` (HuggingFace Hub) | — | Real-time emotion inference |
-| 🐍 **Web Framework** | `Flask` | 2.x | Lightweight REST API server |
+| Layer | Tool / Library | Version | Role |
+|:------|:--------------|:-------:|:-----|
+| 🧠 **Transformer Model** | `distilroberta-base` (HuggingFace) | — | Real-time emotion NLP inference |
+| 🐍 **Web Framework** | `Flask` | 2.x | Lightweight production REST API |
 | 🔗 **CORS Middleware** | `flask-cors` | latest | Cross-origin request handling |
 | 🖼️ **OCR Engine** | `pytesseract` | latest | Computer vision text extraction |
 | 🖼️ **Image Processing** | `Pillow` (PIL) | latest | Grayscale preprocessing for OCR accuracy |
-| 📡 **ML Inference Pipeline** | `transformers` (HuggingFace) | 4.x | NLP model loading + tokenisation |
-| 🌐 **Frontend SPA** | Vanilla HTML / CSS / JS | — | Dark-mode single-page application |
+| 📡 **ML Pipeline** | `transformers` (HuggingFace) | 4.x | NLP model loading + tokenisation |
+| 🌐 **Frontend SPA** | Vanilla HTML/CSS/JS | — | Dark-mode single-page application |
 | 🔒 **Code Quality** | `flake8` + `pre-commit` | — | PEP8 enforcement + secret scanning |
 
 ---
@@ -453,8 +453,6 @@ GET /api/health
 ⚙️   syntax and compile check ................ ✅  Passed
 ```
 
-> Run `pre-commit install` after cloning to activate all hooks locally.
-
 ---
 
 ## ⚠️ Medical & Ethical Disclaimer
@@ -469,17 +467,16 @@ GET /api/health
 ## 🤝 Contributing
 
 ```bash
-# Fork → Branch → Commit → PR
 git checkout -b feature/your-feature-name
 git commit -m "feat: describe your change clearly"
 git push origin feature/your-feature-name
 # Open a Pull Request on GitHub ↗
 ```
 
-- ✅ Follow PEP8 (flake8 will enforce it via pre-commit)
-- ✅ Write descriptive commit messages
-- ✅ Add docstrings to new functions
-- ✅ Test endpoints with Postman or `curl` before submitting
+- ✅ Follow PEP8 — `flake8` enforced via pre-commit
+- ✅ Write descriptive commit messages (`feat:` · `fix:` · `docs:`)
+- ✅ Add docstrings to all new functions
+- ✅ Test all endpoints with `curl` or Postman before submitting PR
 
 ---
 
